@@ -1,14 +1,22 @@
 import React, { Component } from "react";
 import CardList from "./CardList";
-import { robots } from "./robots";
 import SearchBox from "./SearchBox";
 import "./App.css";
 
 class App extends Component {
     state = {
-        robots: robots,
+        robots: [],
         searchfield: ""
     };
+
+    async componentDidMount() {
+        // fetch is a method on window object
+        fetch("https://jsonplaceholder.typicode.com/users")
+            .then(response => response.json())
+            .then(users => this.setState({ robots: users }));
+        console.log("check");
+        this.setState({});
+    }
 
     onSearchChange = event => {
         this.setState({
@@ -22,7 +30,10 @@ class App extends Component {
                 .includes(this.state.searchfield.toLowerCase());
         });
         console.log(filterRobots);
-        return (
+
+        return this.state.robots.length === 0 ? (
+            "Loading..."
+        ) : (
             <div className="tc">
                 <h1>RoboFriends App</h1>
                 <SearchBox
